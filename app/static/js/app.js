@@ -58,7 +58,7 @@ app.component('upload-form', {
         <div v-if="success != false" class="alert alert-success">
             File Uploaded Successfully
         </div>
-        <form method='POST' action='#' enctype='multipart/form-data' @submit.prevent="uploadForm">
+        <form method='POST' action='#' enctype='multipart/form-data' @submit.prevent="uploadPhoto">
             <div class="form-group">
                 <label for="description" class="fw-bold">Description: </label>
                 <textarea id="description" class="form-control" name="description"> </textarea>
@@ -73,7 +73,7 @@ app.component('upload-form', {
     </div>   
     `,
     methods: {
-        uploadForm(){
+        uploadPhoto(){
             let self = this;
             let form = document.forms[0];
             let form_data = new FormData(form);
