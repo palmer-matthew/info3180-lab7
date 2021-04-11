@@ -52,6 +52,12 @@ app.component('upload-form', {
     template: `
     <div class="container">
         <h1>Upload Form</h1>
+        <ul v-if="errors.length > 0" class="alert alert-danger">
+            <li v-for="error in errors">{{ error.error_message }}</li>
+        </ul>
+        <div v-if="success != false" class="alert alert-success">
+            File Uploaded Successfully
+        </div>
         <form method='POST' action='#' enctype='multipart/form-data' @submit.prevent="uploadForm">
             <div class="form-group">
                 <label for="description" class="fw-bold">Description: </label>
@@ -68,6 +74,7 @@ app.component('upload-form', {
     `,
     methods: {
         uploadForm(){
+            let self = this;
             let form = document.forms[0];
             let form_data = new FormData(form);
 
@@ -80,13 +87,21 @@ app.component('upload-form', {
                 credentials: 'same-origin'
             })
             .then(response => response.json())
-            .then(jsonResponse => console.log(jsonResponse))
-            .catch(error => console.log(error));
+            .then(jsonResponse => {
+                if(jsonResponse.errors != null){
+                    self.success = false;
+                    self.errors = jsonResponse.errors;
+                }else if(jsonResponse.message != null){
+                    self.errors = []
+                    self.success = true;
+                }
+            }).catch(error => console.log(error));
         }
     },
     data() {
         return {
-
+            success: false,
+            errors: []
         }
     }
 });
